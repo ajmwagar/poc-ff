@@ -3,15 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "concurrently": "^4.1.2",
+    "launchdarkly-react-client-sdk": "2.13.0",
+    "nodemon": "^1.19.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:all": "concurrently \"yarn start\" \"yarn server\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "nodemon ./svr/server.js"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -27,5 +32,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy":"http://localhost:3001/"
 }
