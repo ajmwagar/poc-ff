@@ -8,13 +8,6 @@ const ldm = (req, res, next) => {
   
   let ldclient = LaunchDarkly.init("sdk-6203c9da-4d89-474d-9dc0-4c01345eb30b");
 
-  
-  const setFlag = (flag, user) => {
-    ldclient.variation(flag, user, false, function(err, showFeature) {
-      req.flags = {[flag]: showFeature};
-    })
-  }
-
   let user = {
     "firstName":"AS",
     "lastName":"DAF",
@@ -24,21 +17,24 @@ const ldm = (req, res, next) => {
     }
  };
  
-  ldclient.once('ready', function() {
-    ldclient.variation("user-details", user, false, function(err, showFeature) {
-      req.flags = {"user-details": showFeature};
-
-
-      ldclient.flush(function() {
-        console.log('ld client flushed')
-        ldclient.close();
-      });
-  
-      next();
-    });
-
-
-  });
+  ldclient.waitForInitialization()
+    .then( 
+        ldclient.variation("user-details", user, false)
+          .then( 
+            showFeature => {
+                req.flags = {"user-details": showFeature};
+                ldclient.flush()
+                  .then(
+                    () => {
+                          console.log('ld client flushed')
+                          ldclient.close()
+                    }
+                  );
+              next();
+            },
+            err => {console.log('Variation error', err)}
+          )
+      )
 };
 
 
