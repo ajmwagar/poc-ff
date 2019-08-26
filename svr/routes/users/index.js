@@ -1,35 +1,16 @@
-// var LaunchDarkly = require('launchdarkly-node-server-sdk');
-// var ldclient = LaunchDarkly.init('sdk-6203c9da-4d89-474d-9dc0-4c01345eb30b');
+const r = require('express').Router();
+const UserDefault = require('./UserDefault')
+const UserExtended = require('./UserExtended')
 
-var UserDefault = require('./UserDefault')
-var UserExtended = require('./UserExtended')
+const UserRouter = r.use('/users', (req, res, next) => {
+  console.log('User Router Entered')
+  console.log('flags', req.flags)
+  res.json((req.flags["user-details"]) ? UserExtended() : UserDefault())
 
-// const flag = false
-var user = {
-  firstName: 'Bob',
-  lastName: 'Loblaw',
-  key: 'user_key',
-  custom: {
-    groups: 'beta_testers'
-  }
-};
+  //res.json({"name":"somename"})
 
-var router = require('express').Router();
+  res.end()
+  next()
+})
 
-router.use('/users', function(req, res, next) {
-
-
-  res.locals.ldclient.variation('user-details', user, false, function(err, showFeature) {
-    if (showFeature) {
-      console.log('UserExtended')
-      router.use(UserExtended)
-      next()
-    } else {
-      console.log('UserDefault')
-      router.use(UserDefault)
-      next()
-    }
-  });
-});
-
-module.exports = router
+module.exports = UserRouter

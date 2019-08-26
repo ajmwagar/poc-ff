@@ -1,10 +1,8 @@
-
-var router = require('express').Router();
-
-router.get('/users', function(req, res, next) {
-  res.json({
+const handler = () => {
+  // console.log('res', res)
+  return {
     name: "Bungalo Bill!!!!!"
-  })
-});
+  };
+}
 
-module.exports = router
+module.exports = handler
