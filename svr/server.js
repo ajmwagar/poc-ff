@@ -1,16 +1,16 @@
-const express = require('express')
-const ldm = require('./middleware/ld')
+const express = require("express");
+const ldm = require("./middleware/ld");
 
-const app = express()
-const port = 3001
+const app = express();
+const port = 3001;
 
-const UserController = require('./routes/users/index')
+const UserController = require("./routes/users/index");
 
-app.use(express.json())
-app.use(ldm)
+app.use(express.json());
+app.use(ldm("user-details"));
+app.use(ldm("wrap-presentation-player"));
 
+app.get("/", (req, res) => res.send("Hello World!"));
+app.use(UserController);
 
-app.get('/', (req, res) => res.send('Hello World!'))
-app.use(UserController)
-
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));
